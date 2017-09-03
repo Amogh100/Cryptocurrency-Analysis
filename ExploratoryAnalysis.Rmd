@@ -1,0 +1,46 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+library(dplyr)
+library(tidyr)
+```
+```{r}
+data <- read.csv("crypto-markets.csv")
+data$date = as.Date(data$date, format="%Y-%m-%d")
+```
+
+
+```{r}
+#Some crypto currencies of interest
+btc <- data %>% filter(coin=="Bitcoin (BTC)")
+eth <- data %>% filter(coin == "Ethereum (ETH)")
+bch <- data %>% filter(coin == "Bitcoin Cash (BCH)")
+dash <- data %>% filter(coin == "Dash (DASH)")
+golem <- data %>% filter(coin == "Golem (GNT)")
+```
+```{r}
+library(ggplot2)
+ggplot() + geom_line(data = eth, aes(x = date, y = close), color = "red") + geom_line(data = btc, aes(x = date, y = close), color = "blue") + geom_line(data=dash, aes(x = date, y = close), color = "green") + xlab("Date") + ylab("Closing Price")
+
+```
+
+```{r}
+#Correlation between eth and btc close(eth ico was later than btc's)
+cor(tail(btc$close, length(eth$close)), eth$close)
+cor(tail(btc$volume, length(eth$volume)), eth$volume)
+```
+
+```{r}
+btcPercChange <- 100 * (btc$close[1] - btc$close[length(btc$close)])/btc$close[length(btc$close)]
+
+ethPercChange <- 100 * (eth$close[1] - eth$close[length(eth$close)])/eth$close[length(eth$close)]
+
+```
+

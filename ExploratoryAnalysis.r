@@ -27,7 +27,7 @@ btcCloseDf <- subset(btc, select = c("date", "close"))
 btcCloseZoo <- read.zoo(btcCloseDf, format = "%Y-%m-%d")
 
 #Simple returns
-btcReturns <- diff(log(btcCloseZoo))/lag(btcCloseZoo, k = -1) * 100
+btcReturns <- diff(diff(log(btcCloseZoo)))/lag(btcCloseZoo, k = -1) * 100
 pacf(btcReturns)
 acf(btcReturns)
 
@@ -45,7 +45,7 @@ print(confint(model))
 tsdiag(model)
 
 #Plotting
-plot(btcReturns, lty = 1, main = "BTC Close: raw data vs fitted", ylab = "Returns", xlab = "Date")
+plot(btcReturns, lty = 1, main = "BTC Close: raw data vs fitted", ylab = "Log Returns", xlab = "Date")
 lines(fitted(model), lty = 2, lwd = 2, col = "blue")
 
 print(accuracy(model))

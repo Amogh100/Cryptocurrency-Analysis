@@ -29,8 +29,18 @@ btcCloseZoo <- read.zoo(btcCloseDf, format = "%Y-%m-%d")
 #Simple returns
 btcReturns <- diff(btcCloseZoo)/lag(btcCloseZoo, k = -1) * 100
 
+plot(btcReturns)
 #Creating Model
 model <- auto.arima(btcReturns, stationary = TRUE, seasonal = FALSE, ic="aic")
 
 print(model)
 print(confint(model))
+
+#Model diagnostic checking
+tsdiag(model)
+
+#Plotting
+plot(btcReturns, lty = 1, main = "BTC Close: raw data vs fitted", ylab = "Returns", xlab = "Date")
+lines(fitted(model), lty = 2, lwd = 2, col = "blue")
+
+print(accuracy(model))

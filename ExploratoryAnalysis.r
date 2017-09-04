@@ -27,11 +27,16 @@ btcCloseDf <- subset(btc, select = c("date", "close"))
 btcCloseZoo <- read.zoo(btcCloseDf, format = "%Y-%m-%d")
 
 #Simple returns
-btcReturns <- diff(btcCloseZoo)/lag(btcCloseZoo, k = -1) * 100
+btcReturns <- diff(log(btcCloseZoo))/lag(btcCloseZoo, k = -1) * 100
+pacf(btcReturns)
+acf(btcReturns)
 
-plot(btcReturns)
+
+
+print(btcReturns)
+# btcReturns$y <- lapply(btcReturns$y, logFunction)
 #Creating Model
-model <- auto.arima(btcReturns, stationary = TRUE, seasonal = FALSE, ic="aic")
+model <- auto.arima(btcReturns, stationary = TRUE, seasonal = TRUE, ic="aic")
 
 print(model)
 print(confint(model))
